@@ -75,21 +75,22 @@ exports.createTour = catchAsync(async (req, res, next) => {
 //findByIdAndUpdate to get by id and update... we pass, req.paramas.id, req.body,{new: true,}...
 //runValidators are used to validate the data..
 
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!tour) {
-    next(new AppError('No tour found with that ID', 404));
-  }
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
+// exports.updateTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   });
+//   if (!tour) {
+//     next(new AppError('No tour found with that ID', 404));
+//   }
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       tour,
+//     },
+//   });
+// });
+exports.updateTour = Factory.updateOne(Tour);
 
 exports.deleteTour = Factory.deleteOne(Tour);
 
