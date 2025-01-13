@@ -62,15 +62,17 @@ exports.getTour = catchAsync(async (req, res, next) => {
 
 //.create method to create new tours..
 
-exports.createTour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body);
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tour: newTour,
-    },
-  });
-});
+// exports.createTour = catchAsync(async (req, res, next) => {
+//   const newTour = await Tour.create(req.body);
+//   res.status(201).json({
+//     status: 'success',
+//     data: {
+//       tour: newTour,
+//     },
+//   });
+// });
+
+exports.createTour = Factory.createOne(Tour);
 
 //findByIdAndUpdate to get by id and update... we pass, req.paramas.id, req.body,{new: true,}...
 //runValidators are used to validate the data..
