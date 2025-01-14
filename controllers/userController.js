@@ -61,13 +61,14 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
+// exports.getUser = (req, res) => {
+//   res.status(500).json({
+//     status: 'error',
+//     message: 'This route is not yet defined',
+//   });
+// };
 
+exports.getUser = Factory.getOne(User);
 // exports.updateUser = (req, res) => {
 //   res.status(500).json({
 //     status: 'error',

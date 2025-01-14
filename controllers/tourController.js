@@ -3,6 +3,7 @@ const APIFeatures = require('./../utils/apifeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Factory = require('./factoryController');
+const path = require('path');
 
 exports.aliasTopTour = (req, res, next) => {
   req.query.limit = '5';
@@ -38,27 +39,29 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 //finding single tour we can use findById
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id).populate('review');
-  // const tour = await Tour.findById(req.params.id).populate({
-  //   path: 'guides',
-  //   select: '-__v -passwordChangedAt',
-  // });
+// exports.getTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findById(req.params.id).populate('review');
+//   // const tour = await Tour.findById(req.params.id).populate({
+//   //   path: 'guides',
+//   //   select: '-__v -passwordChangedAt',
+//   // });
 
-  //here with populate what we are doing is that we using path which specifies which thing I have to show
-  //and then we use select - the - signs shows that which thing I don't have to include.
-  if (!tour) {
-    next(new AppError('No tour found with that ID', 404));
-  }
-  //Tour.findOne({ _id: req.params.id})
-  res.status(200).json({
-    status: 'success',
-    results: tour.length,
-    data: {
-      tour,
-    },
-  });
-});
+//   //here with populate what we are doing is that we using path which specifies which thing I have to show
+//   //and then we use select - the - signs shows that which thing I don't have to include.
+//   if (!tour) {
+//     next(new AppError('No tour found with that ID', 404));
+//   }
+//   //Tour.findOne({ _id: req.params.id})
+//   res.status(200).json({
+//     status: 'success',
+//     results: tour.length,
+//     data: {
+//       tour,
+//     },
+//   });
+// });
+
+exports.getTour = Factory.getOne(Tour, { path: 'reviews' });
 
 //.create method to create new tours..
 
