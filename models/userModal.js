@@ -72,6 +72,8 @@ const useSchema = new mongoose.Schema({
 
 //pre middleware works between getting the data and saving the data in the database so we
 //are using it here..
+
+//->comment strt
 useSchema.pre('save', async function (next) {
   //isModified tell us whether in the current the thing is modified or not..
   if (!this.isModified('password')) return next();
