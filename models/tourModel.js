@@ -131,6 +131,13 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+//here i am going to implement indexes in mongodb on prices
+//in mongoDB if we set something to unique then also it is goin to create indexes for that
+//tourSchema.index({ price: 1 }); //so here 1 represent to sort thing in ascending order but to sort things in descending order we are goin to use -1
+//making compound indexes
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 //virtual Properties..
 // tourSchema.virtual('durationWeeks').get(function () {
 //   return this.duration / 7;
