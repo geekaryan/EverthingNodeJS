@@ -35,7 +35,7 @@ exports.setTourIds = (req, res, next) => {
   //this is used here to allow nested routes
   if (!req.body.tour) req.body.tour = req.params.tourId;
   if (!req.body.user) req.body.user = req.user.id;
-  nex();
+  next();
 };
 
 // exports.createReview = catchAsync(async (req, res, next) => {

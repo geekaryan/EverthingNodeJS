@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
+const { stat } = require('fs');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -60,6 +62,39 @@ reviewSchema.pre(/^find/, function (next) {
     select: 'name photo',
   });
   next();
+});
+
+//basically in this we are performing to calculate average rating using group by just like mysql
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId }, // so the aggreate function  match is used to match particular things so it act as a .find() method in hashmap
+    },
+    {
+      $group: {
+        //so this group by is used to group by just same like we use in our sql
+        _id: '$tour',
+        nRating: { $sum: 1 }, //here it is going to add 1
+        avgRating: { $avg: '$rating' }, // here we are calculating the average rating thing so here we are getting rating from our schema we defined above
+      },
+    },
+  ]);
+
+  console.log(stats);
+
+  //here we are updating the new rating into our Tour itself
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].avgRating,
+  });
+};
+
+//so to add something before being saved to the document we are going to use pre and mention ('save')
+//moreover this is the middleware which we are writing by our own
+// Middleware to trigger after a review is saved
+reviewSchema.post('save', function () {
+  //'this' points to the current review document
+  this.constructor.calcAverageRatings(this.tour); // Calculate average ratings for the associated tour
 });
 
 const Review = mongoose.model('Review', reviewSchema);
