@@ -82,10 +82,17 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   // console.log(stats);
 
   //here we are updating the new rating into our Tour itself
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 
 //so to add something before being saved to the document we are going to use pre and mention ('save')
@@ -94,6 +101,17 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
 reviewSchema.post('save', function () {
   //'this' points to the current review document
   this.constructor.calcAverageRatings(this.tour); // Calculate average ratings for the associated tour
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.r = await this.findOne();
+  console.log(r);
+  next();
+});
+
+//passing the data from pre middleware to the post middleware -> INTERESTING STUFF
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
