@@ -270,3 +270,5 @@ exports.getDistances = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+//for future if I want to use the same code for my food app I can use this code
