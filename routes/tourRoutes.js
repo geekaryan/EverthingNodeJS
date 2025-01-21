@@ -9,6 +9,7 @@ const {
   getTourStats,
   getMonthlyPlan,
   getToursWithin,
+  getDistances,
 } = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 const reviewRoutes = require('./../routes/reviewRoutes');
@@ -45,9 +46,12 @@ router
     getMonthlyPlan
   );
 
+//these are the routes to get your tours within a certain distance
 router
   .route('/tours-within/:distance/center/:latlng/unit/:unit')
   .get(getToursWithin);
+
+router.route('/distances/:latlng/unit/:unit').get(getDistances);
 
 router.route('/top-5-cheap').get(aliasTopTour, getAllTours);
 

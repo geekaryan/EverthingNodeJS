@@ -220,12 +220,12 @@ tourSchema.prependOnceListener(/^find/, function (docs, next) {
 
 //AGGREGATION MIDDLEWARE...
 //removing which have secret tour equal to truee..
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $mathc: { secretTour: { $ne: true } } });
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
 
-  console.log(this.pipeline());
-  next();
-});
+//   console.log(this.pipeline());
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 

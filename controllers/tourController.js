@@ -3,7 +3,6 @@ const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Factory = require('./factoryController');
-const path = require('path');
 
 exports.aliasTopTour = (req, res, next) => {
   req.query.limit = '5';
@@ -224,6 +223,50 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
       data: {
         data: tours,
       },
+    },
+  });
+});
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  // const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat, lng.',
+        400
+      )
+    );
+  }
+
+  //using aggregation pipeline
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        //geoNear always need to be first state
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1], //fist is longitute and second is latitude
+        },
+        distanceField: 'distance', //this is the filed which is goin to hold all the distances
+        distanceMultiplier: multiplier, //this is used to convert the distance into km
+      },
+      //project is used to show the required fields
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances,
     },
   });
 });
