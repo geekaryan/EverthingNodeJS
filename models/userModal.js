@@ -19,7 +19,10 @@ const useSchema = new mongoose.Schema({
     //We are using validate then validator package with validator.isEmail..
     validate: [validator.isEmail, 'Please provide a valid email'], //validate email
   },
-  photos: String,
+  photo: {
+    type: String,
+    default: 'default.jpg', //if user is new logged in add a default image for him in here
+  },
   role: {
     type: String,
     //enum is used to se the roles specific to the application
