@@ -6,7 +6,7 @@ const router = express.Router();
 
 //this route is for creating a check out session
 router.get(
-  '/checkout-session',
+  '/checkout-session/:tourId',
   authController.protect,
   bookingController.getCheckOutSession
 );
