@@ -1,6 +1,8 @@
 require('dotenv').config();
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(
+  'sk_test_51QtV2EKtrWLocb3Y8OuQqv5WaXH1BbZhJuoOqsXSHonprmFn57EJjeIcFA9VydOEisKbJ88BUA15K2XMzTITxZWb00ooiytmRZ'
+);
 
 const catchAsync = require('./../utils/catchAsync');
 const Tour = require('./../models/tourModel');
